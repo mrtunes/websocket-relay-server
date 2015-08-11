@@ -12,6 +12,7 @@ var appResources = config.webRoot.indexOf("/") === 0 ? config.webRoot : __dirnam
 app.use("/", express.static(appResources));
 console.log("Server listening on port " + config.port);
 
+
 var allConnectedSockets = [];
 
 wss.on("connection", function (socket) {
@@ -21,6 +22,8 @@ wss.on("connection", function (socket) {
         allConnectedSockets.forEach(function (someSocket) {
             if (someSocket !== socket) {
                 someSocket.send(data);
+                //is this where data gets printed out? 
+                console.log(message);
             }
         });
     });
