@@ -1,0 +1,13 @@
+        .heavytext{
+                font-weight: bold;
+            }
+
+            #sliderCtrl2, #sliderCtrl3 {
+                width: 360;
+            }
+
+         
+           #smile canvas {max-height:200px;  float:left; overflow:hidden;}
+            #eyes{position:absolute; top:40; left:30}
+                 #leftEye{
+                  margin-left:20px; margin-right:60px;}

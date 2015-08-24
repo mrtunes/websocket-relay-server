@@ -1,0 +1,252 @@
+<html>
+
+<script src="dist/jquery-1.10.2.js"></script>
+  <script src="dist/jquery-ui.js"></script>
+
+     <script src="dist/flocking-all.js"></script>
+         <script src="dist/jquery.knob.min.js"></script>
+               <script src="synthdef.js"></script>
+
+       <link rel="style.css" />
+ 
+
+    <script>
+            $(document).ready(function(){
+ 
+var socketInput; 
+
+
+
+                 synth.play();
+
+
+
+                  $("#leftEye").click(function() {
+ synth.set("mySynth.mul.gate", 1);
+ synth.set("mySynth.freq", 440);
+
+
+
+
+
+});    
+
+
+
+
+       $("#rightEye").click(function() {
+ synth.set("mySynth.mul.gate", 1);
+ synth.set("mySynth.freq", 540);
+
+});         
+
+             $( "#Tri" ).click(function() {
+  synth.set("mySynth", {
+        id:"mySynth",
+        ugen: "flock.ugen.triOsc",
+            
+        freq: 440,
+        mul: {  id:"mod",
+                ugen: "flock.ugen.env.simpleASR",
+                gate: 0,
+                attack: 0.05,
+                sustain: .5,
+                release: 0.5
+            }
+        
+      });
+});        return false;        
+
+
+               });
+
+
+
+  </script>
+<script>
+
+
+function bgcolour() {
+  $( "body").css( "background-color", "#fffff" + bgcolour );
+}
+
+
+window.onload = function() {
+
+
+
+function changeBackground(color) {
+   document.body.style.background = color;
+}
+
+
+
+//document.getElementById("input").style.backgroundColor = '#000000';
+
+
+  // Get references to elements on the page.
+  var form = document.getElementById('message-form');
+  var messageField = document.getElementById('message');
+  var messagesList = document.getElementById('messages');
+  var socketStatus = document.getElementById('status');
+  var closeBtn = document.getElementById('close');
+  var display = document.getElementById('#log');
+
+
+  // Create a new WebSocket.
+  var socket = new WebSocket('ws://localhost:8081');
+
+      
+    
+   
+        $(".dial").knob({
+    'min':100,
+    'max':300, 
+    'angleOffset':90,
+    'angleArc':180,
+    'displayInput':false,
+    //'rotation':acw,
+
+     'change' : function (v) { synth.set("mySynth.mul.gate", 1);
+                        synth.set("mySynth.freq", v);
+
+                        
+                        console.log(v);
+                        socket.send(v);
+                         //logIt.innerHTML = v;
+                         
+                       },
+
+      'release' : function (v) { synth.set("mySynth.mul.gate", 0);}                   
+
+    });
+
+    
+
+
+  // Handle any errors that occur.
+  socket.onerror = function(error) {
+    console.log('WebSocket Error: ' + error);
+  };
+
+
+  // Show a connected message when the WebSocket is opened.
+  socket.onopen = function(event) {
+    socketStatus.innerHTML = 'Connected to: ws://localhost:8081';
+    socketStatus.className = 'open';
+    socket.send("i'm sending on the open");
+
+
+  };
+
+
+  // Handle messages sent by the server.
+  /*socket.onmessage = function(event) {
+  
+    var message = event.data;
+    messagesList.innerHTML += '<li class="received"><span>Received:</span>' +
+                               message + '</li>';
+    display.innerHTML += message;
+                              
+ changeBackground(message); 
+ console.log("show me the" + message); //
+
+ display.innerHTML += message; 
+
+       
+  }; */
+    
+
+    socket.onmessage = function(evt){
+
+     
+var synthchange = evt.data;
+
+ synth.set("mySynth.freq", synthchange);
+console.log(synthchange);
+
+    }
+
+  // Show a disconnected message when the WebSocket is closed.
+  socket.onclose = function(event) {
+    socketStatus.innerHTML = 'Disconnected from WebSocket.';
+    socketStatus.className = 'closed';
+
+  };
+
+
+  // Send a message when the form is submitted.
+  form.onsubmit = function(e) {
+    e.preventDefault();
+
+      var freq1 = mySynth.freq.value;
+
+    // Send the message through the WebSocket.
+  
+         
+
+    // Retrieve the message from the textarea.
+    var message = messageField.value;
+    var logKnob = turning.value;
+
+    // Send the message through the WebSocket.
+    socket.send(message);
+         console.log("i typed " + message);
+         changeBackground(message);  
+socket.send( $('.dial').val() );
+//console.log( $('.dial').val() );
+
+
+
+    // Add the message to the messages list.
+    messagesList.innerHTML += '<li class="sent"><span>Sent:</span>' + message +
+                              '</li>';
+
+    // Clear out the message field.
+    messageField.value = '';
+
+    return false;
+  };
+
+
+  // Close the WebSocket connection when the close button is clicked.
+  closeBtn.onclick = function(e) {
+    e.preventDefault();
+
+    // Close the WebSocket.
+    socket.close();
+
+    return false;
+  };
+
+};
+</script>
+<body>
+<div id="page-wrapper">
+  <h1>WebSockets Demo</h1>
+  
+  <div id="status">Connecting...</div>
+    <div id="log"></div>
+  
+  <ul id="messages"></ul>
+  
+  <form id="message-form" action="#" method="post">
+    <textarea id="message" placeholder="Write your message here..." required></textarea>
+    <button type="submit">Send Message</button>
+    <button type="button" id="close">Close Connection</button>
+  </form>
+
+<div id="face">
+     <div id="eyes">
+      <button type="button" id="leftEye" />1</button>
+       <button type="button" id="rightEye" />2</button>
+     </div>
+
+<div id="smile">
+<input type="text" value="75" class="dial">
+</div>
+</div>
+
+</div>
+</body>
+</html>
