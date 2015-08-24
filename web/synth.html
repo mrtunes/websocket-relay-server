@@ -14,6 +14,8 @@
             $(document).ready(function(){
  var synthChange;
 var socketInput; 
+var object; 
+var jsonstring; 
 
 
 
@@ -109,19 +111,21 @@ function changeBackground(color) {
 
      'change' : function (v) { synth.set("mySynth.mul.gate", 1);
                         synth.set("mySynth.freq", v);
-
+                       
                         
                         console.log(v);
-
-                        
-                          socket.send(synth.set("mySynth.mul.gate", 1));
-                        socket.send(synth.set("mySynth.freq", v));
+                         var synthobject = {"freq":v, "gate":"1"};     
+                         var jsonstring = JSON.stringify(synthobject);      
+                        socket.send(jsonstring);
+                         // socket.send(synth.set("mySynth.mul.gate", 1));
+                              
+                        //socket.send(synth.set("mySynth.freq", v));
                          //logIt.innerHTML = v;
                          
                        },
 
       'release' : function (v) { synth.set("mySynth.mul.gate", 0);
-   socket.send(synth.set("mySynth.mul.gate", 0));
+   //socket.send(synth.set("mySynth.mul.gate", 0));
     }                   
 
     });
@@ -163,12 +167,15 @@ function changeBackground(color) {
     
 
     socket.onmessage = function(evt){
-
+//var object = JSON.parse(evt.data);
      
- synthchange = evt.data;
+// synthchange = evt.data;
 
- //
-console.log("synth from another browser " + synthchange);
+ var jsonobject = JSON.parse(evt.data);
+        console.log("json import " + jsonobject.freq);
+        synth.set("mySynth.mul.gate", 1);
+       synth.set("mySynth.freq", jsonobject.freq);
+//console.log("synth from another browser " + evt.data);
 
     }
 
