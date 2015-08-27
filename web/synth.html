@@ -19,7 +19,9 @@ var jsonstring;
 
 
 
-                 synth.play();
+    //flock.enviro.shared.play();
+                synth.play();
+                  //synth2.play();
 
 
 
@@ -75,6 +77,11 @@ function bgcolour() {
 
 window.onload = function() {
 
+var synths;
+                         
+                            
+      
+
 
 
 function changeBackground(color) {
@@ -109,13 +116,20 @@ function changeBackground(color) {
     'displayInput':false,
     //'rotation':acw,
 
-     'change' : function (v) { synth.set("mySynth.mul.gate", 1);
+     'change' : function (v) { 
+
+
+      synth.set("mySynth.mul.gate", 1);
                         synth.set("mySynth.freq", v);
                        
                         
-                        console.log(v);
-                         var synthobject = {"freq":v, "gate":"1"};     
-                         var jsonstring = JSON.stringify(synthobject);      
+                        //console.log(v);
+
+  //var synthGate = 1;
+var synthobject = {"freq":v, "gate":1};     
+                         var jsonstring = JSON.stringify(synthobject); 
+                         
+                            
                         socket.send(jsonstring);
                          // socket.send(synth.set("mySynth.mul.gate", 1));
                               
@@ -125,7 +139,11 @@ function changeBackground(color) {
                        },
 
       'release' : function (v) { synth.set("mySynth.mul.gate", 0);
-   //socket.send(synth.set("mySynth.mul.gate", 0));
+     var synthobject = {"freq":v, "gate":0};     
+                         var jsonstring = JSON.stringify(synthobject); 
+                         
+                            
+                        socket.send(jsonstring);
     }                   
 
     });
@@ -145,6 +163,10 @@ function changeBackground(color) {
     socketStatus.className = 'open';
     socket.send("i'm sending on the open");
 
+// var joinObject = {"id":"Elliott", "type":"join"};     
+// var jsonstring2 = JSON.stringify(joinObject); 
+
+// socket.send(jsonstring2);
 
   };
 
@@ -167,15 +189,34 @@ function changeBackground(color) {
     
 
     socket.onmessage = function(evt){
-//var object = JSON.parse(evt.data);
-     
-// synthchange = evt.data;
 
+     
+
+//console.log("synth ", evt.data)
  var jsonobject = JSON.parse(evt.data);
         console.log("json import " + jsonobject.freq);
-        synth.set("mySynth.mul.gate", 1);
+        synth.set("mySynth.mul.gate", jsonobject.gate);
        synth.set("mySynth.freq", jsonobject.freq);
-//console.log("synth from another browser " + evt.data);
+
+       //synth.set("Elliottef.freq", jsonobject.freq);
+console.log("synth from another browser ", evt.data);
+
+
+
+
+
+
+    var message = JSON.parse(evt.data);
+    if (message.type === "join") {
+          //synths[newUser] = flock.synth({synthDef: {id:message.id, ugen:"flock.ugen.sinOsc", freq:300} });
+        console.log(message.id + "ef");
+    } else if (message.type ==="change") {
+        synths[message.id].set(message.value);
+    } else if (message.type === "leave") {
+        synths[message.id].destroy();
+        console.log("elvis has left the building");
+    }
+
 
     }
 
@@ -183,6 +224,9 @@ function changeBackground(color) {
   socket.onclose = function(event) {
     socketStatus.innerHTML = 'Disconnected from WebSocket.';
     socketStatus.className = 'closed';
+    console.log("trying to leave");
+
+  
 
   };
 
@@ -224,6 +268,11 @@ socket.send( $('.dial').val() );
   // Close the WebSocket connection when the close button is clicked.
   closeBtn.onclick = function(e) {
     e.preventDefault();
+
+//var leaveObject = {"id":"Elliott", "type":"leave"};     
+//var jsonstring3 = JSON.stringify(leaveObject); 
+
+//socket.send(jsonstring3);
 
     // Close the WebSocket.
     socket.close();

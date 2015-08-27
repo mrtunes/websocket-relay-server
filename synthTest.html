@@ -1,0 +1,65 @@
+<html>
+<script src="web/dist/jquery-1.10.2.js"></script>
+  <script src="web/dist/jquery-ui.js"></script>
+
+     <script src="web/dist/flocking-all.js"></script>
+<script>
+$(document).ready(function(){
+var synth = flock.synth({
+    synthDef: {
+        id:"mySynth",
+        ugen: "flock.ugen.sinOsc",
+            
+        freq: 440,
+        mul: {  id:"mod",
+                ugen: "flock.ugen.env.simpleASR",
+                gate: 0,
+                attack: 0.05,
+                sustain: .5,
+                release: 0.5
+                    
+            }
+}
+ });
+
+/*var synth2 = flock.synth({
+    synthDef: {
+        id:"mySynth",
+        ugen: "flock.ugen.sinOsc",
+            
+        freq: 440,
+        mul: {  id:"mod",
+                ugen: "flock.ugen.env.simpleASR",
+                gate: 0,
+                attack: 0.05,
+                sustain: .5,
+                release: 0.5
+                    
+            }
+
+       
+
+
+
+}
+ });*/
+
+
+
+
+
+   
+
+   
+    //addToEnvironment: false // This tells Flocking not to start playing this synth right away.
+
+
+ //flock.enviro.shared.play();
+
+    //flock.enviro.shared.play();
+  });
+
+synth.play();
+    </script>
+
+</html>
