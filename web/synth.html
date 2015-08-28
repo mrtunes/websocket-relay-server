@@ -8,14 +8,14 @@
                <script src="synthdef.js"></script>
 
        <link rel="style.css" />
- 
+
 
     <script>
             $(document).ready(function(){
  var synthChange;
-var socketInput; 
-var object; 
-var jsonstring; 
+var socketInput;
+var object;
+var jsonstring;
 
 
 
@@ -33,7 +33,7 @@ var jsonstring;
 
 
 
-});    
+});
 
 
 
@@ -42,13 +42,13 @@ var jsonstring;
  synth.set("mySynth.mul.gate", 1);
  synth.set("mySynth.freq", 540);
 
-});         
+});
 
              $( "#Tri" ).click(function() {
   synth.set("mySynth", {
         id:"mySynth",
         ugen: "flock.ugen.triOsc",
-            
+
         freq: 440,
         mul: {  id:"mod",
                 ugen: "flock.ugen.env.simpleASR",
@@ -57,9 +57,9 @@ var jsonstring;
                 sustain: .5,
                 release: 0.5
             }
-        
+
       });
-});        return false;        
+});        return false;
 
 
                });
@@ -77,9 +77,9 @@ function bgcolour() {
 
 window.onload = function() {
 
-                         
-                            
-      
+
+
+
 
 
 
@@ -104,50 +104,50 @@ function changeBackground(color) {
   // Create a new WebSocket.
   var socket = new WebSocket('ws://localhost:8081');
 
-      
-    
-   
+
+
+
         $(".dial").knob({
     'min':100,
-    'max':300, 
+    'max':300,
     'angleOffset':90,
     'angleArc':180,
     'displayInput':false,
     //'rotation':acw,
 
-     'change' : function (v) { 
+     'change' : function (v) {
 
 
       synth.set("mySynth.mul.gate", 1);
                         synth.set("mySynth.freq", v);
-                       
-                        
+
+
                         //console.log(v);
 
   //var synthGate = 1;
-var synthobject = {"freq":v, "gate":1};     
-                         var jsonstring = JSON.stringify(synthobject); 
-                         
-                            
+var synthobject = {"freq":v, "gate":1};
+                         var jsonstring = JSON.stringify(synthobject);
+
+
                         socket.send(jsonstring);
                          // socket.send(synth.set("mySynth.mul.gate", 1));
-                              
+
                         //socket.send(synth.set("mySynth.freq", v));
                          //logIt.innerHTML = v;
-                         
+
                        },
 
       'release' : function (v) { synth.set("mySynth.mul.gate", 0);
-     var synthobject = {"freq":v, "gate":0};     
-                         var jsonstring = JSON.stringify(synthobject); 
-                         
-                            
+     var synthobject = {"freq":v, "gate":0};
+                         var jsonstring = JSON.stringify(synthobject);
+
+
                         socket.send(jsonstring);
-    }                   
+    }
 
     });
 
-    
+
 
 
   // Handle any errors that occur.
@@ -158,45 +158,48 @@ var synthobject = {"freq":v, "gate":1};
 
   // Show a connected message when the WebSocket is opened.
   socket.onopen = function(event) {
-    socketStatus.innerHTML = 'Connected to: ws://localhost:8081';
-    socketStatus.className = 'open';
-    socket.send("i'm sending on the open");
+   console.log("hey"); 
 
-// var joinObject = {"id":"Elliott", "type":"join"};     
-// var jsonstring2 = JSON.stringify(joinObject); 
+ var joinObject = {"id":"Elliott", "type":"join"};
+ var jsonstring2 = JSON.stringify(joinObject);
 
-// socket.send(jsonstring2);
 
-  };
+
+   socket.send(jsonstring2);
+};
+
+
+
+ 
 
 
   // Handle messages sent by the server.
   /*socket.onmessage = function(event) {
-  
+
     var message = event.data;
     messagesList.innerHTML += '<li class="received"><span>Received:</span>' +
                                message + '</li>';
     display.innerHTML += message;
-                              
- changeBackground(message); 
+
+ changeBackground(message);
  console.log("show me the" + message); //
 
- display.innerHTML += message; 
+ display.innerHTML += message;
 
-       
+
   }; */
-    
-var synths {};
+
+var synthID;
 
     socket.onmessage = function(evt){
 
-     
+
 
 //console.log("synth ", evt.data)
  var jsonobject = JSON.parse(evt.data);
         console.log("json import " + jsonobject.freq);
         synth.set("mySynth.mul.gate", jsonobject.gate);
-       synth.set("mySynth.freq", jsonobject.freq);
+       synth.set("mySynth.freq", (jsonobject.freq + 500));
 
        //synth.set("Elliottef.freq", jsonobject.freq);
 console.log("synth from another browser ", evt.data);
@@ -208,8 +211,11 @@ console.log("synth from another browser ", evt.data);
 
     var message = JSON.parse(evt.data);
     if (message.type === "join") {
-          //synths[newUser] = flock.synth({synthDef: {id:message.id, ugen:"flock.ugen.sinOsc", freq:300} });
-        console.log(message.id + "ef");
+         var synthID = message.id; 
+         synthID = flock.synth({synthDef: {id:message.id, ugen:"flock.ugen.sinOsc", freq:300, mul:0.2} });
+         synthID.play();
+        console.log(message.id + " ef");
+         
     } else if (message.type ==="change") {
         synths[message.id].set(message.value);
     } else if (message.type === "leave") {
@@ -226,7 +232,7 @@ console.log("synth from another browser ", evt.data);
     socketStatus.className = 'closed';
     console.log("trying to leave");
 
-  
+
 
   };
 
@@ -238,8 +244,8 @@ console.log("synth from another browser ", evt.data);
       var freq1 = mySynth.freq.value;
 
     // Send the message through the WebSocket.
-  
-         
+
+
 
     // Retrieve the message from the textarea.
     var message = messageField.value;
@@ -248,7 +254,7 @@ console.log("synth from another browser ", evt.data);
     // Send the message through the WebSocket.
     socket.send(message);
          console.log("i typed " + message);
-         changeBackground(message);  
+         changeBackground(message);
 socket.send( $('.dial').val() );
 //console.log( $('.dial').val() );
 
@@ -269,8 +275,8 @@ socket.send( $('.dial').val() );
   closeBtn.onclick = function(e) {
     e.preventDefault();
 
-//var leaveObject = {"id":"Elliott", "type":"leave"};     
-//var jsonstring3 = JSON.stringify(leaveObject); 
+//var leaveObject = {"id":"Elliott", "type":"leave"};
+//var jsonstring3 = JSON.stringify(leaveObject);
 
 //socket.send(jsonstring3);
 
@@ -285,12 +291,12 @@ socket.send( $('.dial').val() );
 <body>
 <div id="page-wrapper">
   <h1>WebSockets Demo</h1>
-  
+
   <div id="status">Connecting...</div>
     <div id="log"></div>
-  
+
   <ul id="messages"></ul>
-  
+
   <form id="message-form" action="#" method="post">
    <!-- <textarea id="message" placeholder="Write your message here..." required></textarea>
     <button type="submit">Send Message</button>-->
