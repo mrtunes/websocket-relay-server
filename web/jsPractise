@@ -1,0 +1,10 @@
+<html>
+<script>
+var display = getElementbyId("#log");
+display += 1; 
+</script>
+<body>
+<div id="log"></div>
+</body>
+
+</html>

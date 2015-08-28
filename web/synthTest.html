@@ -5,6 +5,8 @@
      <script src="dist/flocking-all.js"></script>
 <script>
 $(document).ready(function(){
+
+ 
 var synth = flock.synth({
     synthDef: {
         id:"mySynth",
@@ -22,30 +24,26 @@ var synth = flock.synth({
 }
  });
 
-/*var synth2 = flock.synth({
+var synth2 = flock.synth({
     synthDef: {
-        id:"mySynth",
+        id:"synth2",
         ugen: "flock.ugen.sinOsc",
             
-        freq: 440,
-        mul: {  id:"mod",
-                ugen: "flock.ugen.env.simpleASR",
-                gate: 0,
-                attack: 0.05,
-                sustain: .5,
-                release: 0.5
-                    
-            }
-
-       
+        freq: 490,
+       mul:0.2 
 
 
 
 }
- });*/
+ });
 
 
-
+$('p').click(function(){
+    //alert("clicked");
+   synth2.set("synth2.freq", 800); 
+   setInterval(300);
+synth2.pause();
+});
 
 
    
@@ -55,11 +53,12 @@ var synth = flock.synth({
 
 
  //flock.enviro.shared.play();
-
-    //flock.enviro.shared.play();
+//synth.play();
+//synth2.play();
+    flock.enviro.shared.play();
   });
 
-synth.play();
-    </script>
 
+    </script>
+<p>test</p>
 </html>
