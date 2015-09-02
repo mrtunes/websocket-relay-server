@@ -1,0 +1,30 @@
+<script>
+
+window.onload = function() {
+
+
+myStorage = localStorage; 
+//localStorage.setItem('username', 'Eldrich');
+
+
+  
+}
+
+function formSubmit (){
+	var formName = document.getElementById('name');
+   document.getElementById("register").submit();
+   //avatar = formName.value;
+   //console.log(avatar);
+   localStorage.setItem('username', formName.value);
+
+}  
+
+</script>
+
+<body>
+ <form id="register" action="/freshStart.html" method="post">
+   <textarea id="name" placeholder="Enter your name"></textarea>
+  <button type="submit" onclick="formSubmit()">Submit</button>
+ 
+  </form>
+</body>

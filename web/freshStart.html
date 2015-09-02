@@ -1,0 +1,70 @@
+<html>
+
+	 <script src="dist/jquery-1.10.2.js"></script>
+     <script src="dist/flocking-all.js"></script>  
+	 <link rel="style.css" />
+
+
+    <script>
+window.onload = function() {
+  myStorage = localStorage; 
+  console.log(myStorage.username);
+
+
+
+ 
+  var socket = new WebSocket('ws://localhost:8081');
+  //socket.send("connected");
+  //var jsonstring = JSON.stringify({"freq":300, "gate":1});
+  //socket.send(jsonstring);
+
+
+  socket.onopen = function(event) {
+  
+  
+ var jsonstring = JSON.stringify({"id":myStorage.username, "type":"join"});
+  socket.send(jsonstring);
+};
+
+   socket.onmessage = function(event){
+var message = JSON.parse(event.data);
+
+if (message.type === "join") {
+console.log("joined " + message.type);
+var synths = {};
+  synths[message.id] = flock.synth({synthDef: {id:message.id, ugen:"flock.ugen.sinOsc", freq:300} });
+  
+
+synths[message.id].play();
+
+} else if(message.type ==="change"){
+  console.log("change message");
+}
+else if(message.type ==="leave"){
+   synths[message.id].destroy();
+}
+
+
+};
+
+
+socket.onclose = function(event) {
+  //var jsonstring = JSON.stringify({"type": "leave"});
+  //socket.send(jsonstring);
+  console.log("closer");
+  };
+
+
+   }
+
+
+
+
+
+
+
+  
+
+</script>
+
+ </html>

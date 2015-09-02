@@ -24,13 +24,32 @@ wss.on("connection", function (socket) {
             allConnectedSockets.forEach(function (someSocket) {
             if (someSocket !== socket) {
                 someSocket.send(data);
-                 console.log(data);       
+                        
                
             }
 
 
         });
     });
+
+    var clientMessages = {};
+
+socket.on("message", function (data) {
+    if (data.type === "join") {
+        // A new client has joined.
+        // First, send them all the changes for all the current synths that are in the chat.
+         var jsonstringy = JSON.stringify({ type: "history", value: clientMessages}); 
+         socket.send(jsonstringy);
+
+        
+        // Now create a new record to store all changes sent to this synth.    
+        //clientMessages[data.id] = [data];
+    } else if (data.type === "leave") {
+        //delete clientMessages[data.id];
+    } else {
+        //clientMessages[data.id].push(data);
+    }
+});
 
 
     socket.on("close", function () {
