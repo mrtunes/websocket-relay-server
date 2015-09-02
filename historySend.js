@@ -43,11 +43,11 @@ socket.on("message", function (data) {
 
         
         // Now create a new record to store all changes sent to this synth.    
-        //clientMessages[data.id] = [data];
+        clientMessages[data.id] = [data];
     } else if (data.type === "leave") {
-        //delete clientMessages[data.id];
+        delete clientMessages[data.id];
     } else {
-        //clientMessages[data.id].push(data);
+    clientMessages[data.id].push(data);
     }
 });
 
