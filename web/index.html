@@ -1,0 +1,95 @@
+<html>
+
+	 <script src="dist/jquery-1.10.2.js"></script>
+     <script src="dist/flocking-all.js"></script>
+		 <script src="dist/processing.min.js"></script>
+	 <link rel="style.css" />
+
+
+    <script>
+window.onload = function() {
+  myStorage = localStorage;
+  console.log(myStorage.username);
+
+
+
+
+  var socket = new WebSocket('ws://localhost:8081');
+  //socket.send("connected");
+  //var jsonstring = JSON.stringify({"freq":300, "gate":1});
+  //socket.send(jsonstring);
+
+
+  socket.onopen = function(event) {
+ var jsonstring = JSON.stringify({"id":myStorage.username, "type":"join"});
+  socket.send(jsonstring);
+};
+
+//synths[message.id] = flock.synth({synthDef: {id:message.id, ugen:"flock.ugen.sinOsc", freq:300} });
+//synths[message.id].play();
+
+// Sine 500 Elliott
+// {id: Elliott, ugen:"flock.ugen.sinOsc", freq:500}
+// Filter wah Elliott
+// Triangle 512 Jerry
+// Filter echo Jerry
+// Jerry echo 32
+// Elliott wobble
+// Elliott die
+// Jerry die
+// Jerry echo die
+
+
+var synths = {};
+
+function applyMessage(message) {
+    if (message.type === "join") {
+        // Someone just joined the chat. Create and store a new synth for them.
+        synths[message.id] = flock.synth({synthDef: message.value});
+				console.log("hey there");
+    } else if (message.type ==="change") {
+        // A synth has just changed. Update it.
+        synths[message.id].set(message.value);
+    } else if (message.type === "leave") {
+        // Someone just left the chat. Delete their synth.
+        synths[message.id].destroy();
+    } else if (message.type === "history") {
+        // We just received a history event, so we should recursively apply all the changes
+        // we received. A history record is contains an array of changes for each active synth.
+        // As a result, we first need to iterate over the changes for each active synth,
+        // and then apply them one-by-one.
+
+				fluid.each(message.value, function (changesForSynth) { // Loop through each synth in the history record.
+            fluid.each(changesForSynth, function (change) { // Loop through each event in the synth’s changes array.
+                applyChange(changesForSynth);
+            });
+        });
+    }
+}
+
+socket.onmessage = function (evt) {
+    var message = JSON.parse(evt.data);
+    applyMessage(message);
+};
+
+
+socket.onclose = function(event) {
+  var jsonstring = JSON.stringify({"type": "leave"});
+  socket.send(jsonstring);
+  console.log("closer");
+  };
+
+
+   }
+
+
+
+
+
+
+
+
+
+</script>
+
+ </html>
