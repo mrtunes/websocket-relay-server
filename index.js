@@ -36,7 +36,7 @@ wss.on("connection", function (socket) {
 
 socket.on("message", function (data) {
   var parsed = JSON.parse(data);
-
+console.log("parsed id " + parsed.id);
     if (parsed.type === "join") {
         // A new client has joined.
         // First, send them all the changes for all the current synths that are in the chat.
@@ -56,7 +56,8 @@ socket.on("message", function (data) {
 
 
     socket.on("close", function () {
-      console.log("closer");
+      var jsonstringy = JSON.stringify({ type: "leave"});
+      socket.send(jsonstringy);
         var idx = allConnectedSockets.indexOf(socket);
         allConnectedSockets.splice(idx, 1);
 

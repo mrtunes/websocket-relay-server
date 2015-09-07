@@ -4,10 +4,15 @@ window.onload = function() {
 myStorage = localStorage;
 }
 
+//var synth1 = JSON.stringify({id: myStorage.username, freq: 440});
+//console.log(synth1);
+
 function formSubmit (){
   console.log("data coming in");
 	var formName = document.getElementById('name');
   localStorage.setItem('username', formName.value);
+  localStorage.setItem('synthgen', "flock.ugen.sinOsc");
+  localStorage.setItem('freq', 700);
   window.location.href = "synthRoom.html";
 }
 
@@ -15,5 +20,12 @@ function formSubmit (){
 
 <body>
   <textarea id="name" placeholder="Enter your name"></textarea>
+  <H2>Pick a synth</h2>
+    <ul>
+    <li>synth 1</li>
+    <li>synth 2</li>
+    <li>synth 3</li>
+    </ul>
+
   <button type="submit" onclick="formSubmit()">Submit</button>
 </body>

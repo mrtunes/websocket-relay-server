@@ -10,7 +10,9 @@
 window.onload = function() {
   myStorage = localStorage;
   console.log(myStorage.username);
+	console.log(myStorage.synthgen);
 	var userlist = document.getElementById("userList");
+
 
 
 
@@ -23,7 +25,7 @@ window.onload = function() {
 
 
   socket.onopen = function(event) {
- var jsonstring = JSON.stringify({"id":myStorage.username, "type":"join"});
+ var jsonstring = JSON.stringify({"type":"join", "id":myStorage.username});
   socket.send(jsonstring);
 };
 
@@ -33,18 +35,36 @@ window.onload = function() {
 
 
 var synths = {};
+var localFreq = myStorage.freq;
+var localname = myStorage.username;
+var crazyFreq = Math.floor((Math.random() * 700) + 200);
+console.log(localFreq);
 
 function applyMessage(message) {
     if (message.type === "join") {
+
         // Someone just joined the chat. Create and store a new synth for them.
-        synths[message.id] = flock.synth({synthDef: message.value});
+        //synths[myStorage.username] = flock.synth({synthDef: {id:myStorage.username, freq:myStorage.freq, ugen:myStorage.ugen } });
+				synths[message.id] = flock.synth({synthDef: {id:message.id,  ugen:"flock.ugen.sinOsc", freq:crazyFreq } });
+			//	console.log("logging the msg " + message.value);
+				synths[message.id].play();
 				userList.innerHTML += message.id + "<br />";
+
+
+									synth.set("test.freq", 600);
+
+				$(".slider").on("change", function(){
+
+
+					});
 
     } else if (message.type ==="change") {
         // A synth has just changed. Update it.
-        synths[message.id].set(message.value);
+				console.log(message.value);
+        synths[localname].set(message.value);
     } else if (message.type === "leave") {
         // Someone just left the chat. Delete their synth.
+				console.log("killing");
         synths[message.id].destroy();
     } else if (message.type === "history") {
         // We just received a history event, so we should recursively apply all the changes
@@ -61,9 +81,20 @@ function applyMessage(message) {
 }
 
 socket.onmessage = function (evt) {
+
+
+
+	$(".slider").on("change", function(){
+
+
+		var jsonstring = JSON.stringify({"type":"change", "value":'localname.freq, this.value'});
+			 socket.send(jsonstring);
+		});
     var message = JSON.parse(evt.data);
     applyMessage(message);
 };
+
+
 
 
 socket.onclose = function(event) {
@@ -79,5 +110,6 @@ socket.onclose = function(event) {
 
 <p>Who is in the room with us today?</p> <br />
 <div id="userList">
+	<input type="range" class="slider" />
 </div>
  </html>
