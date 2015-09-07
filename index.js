@@ -50,7 +50,9 @@ console.log("parsed id " + parsed.id);
     } else if (parsed.type === "leave") {
         delete clientMessages[parsed.id];
     } else {
+      console.log(data);
     clientMessages[parsed.id].push(parsed);
+
     }
 });
 
