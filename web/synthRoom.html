@@ -88,7 +88,7 @@ socket.onmessage = function (evt) {
 
 
 socket.onclose = function(event) {
-  var jsonstring = JSON.stringify({"type": "leave"});
+  var jsonstring = JSON.stringify({type: "leave"});
   socket.send(jsonstring);
   console.log("closer");
   };

@@ -46,11 +46,12 @@ console.log("parsed id " + parsed.id);
 
         // Now create a new record to store all changes sent to this synth.
        clientMessages[parsed.id] = [parsed];
-       console.log(clientMessages);
+       console.log("point 1 " + data);
     } else if (parsed.type === "leave") {
         delete clientMessages[parsed.id];
+        console.log("point 2 " + data);
     } else {
-      console.log(data);
+    console.log("point 3 " + data);
     clientMessages[parsed.id].push(parsed);
 
     }
@@ -58,8 +59,16 @@ console.log("parsed id " + parsed.id);
 
 
     socket.on("close", function () {
-      var jsonstringy = JSON.stringify({ type: "leave"});
-      socket.send(jsonstringy);
+
+      allConnectedSockets.forEach(function (someSocket) {
+      if (someSocket !== socket) {
+
+          var jsonstringy = JSON.stringify({ type: "leave"});
+          someSocket.send(jsonstringy);
+            console.log("point 4 ");
+      }
+      });
+
         var idx = allConnectedSockets.indexOf(socket);
         allConnectedSockets.splice(idx, 1);
 
