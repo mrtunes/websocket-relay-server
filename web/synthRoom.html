@@ -70,7 +70,7 @@ function applyMessage(message) {
         // we received. A history record is contains an array of changes for each active synth.
         // As a result, we first need to iterate over the changes for each active synth,
         // and then apply them one-by-one.
-
+        console.log("message.value " + message.value);
 				fluid.each(message.value, function (changesForSynth) { // Loop through each synth in the history record.
             fluid.each(changesForSynth, function (change) { // Loop through each event in the synth’s changes array.
                 applyChange(changesForSynth);

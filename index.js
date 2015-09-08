@@ -36,7 +36,6 @@ wss.on("connection", function (socket) {
 
 socket.on("message", function (data) {
   var parsed = JSON.parse(data);
-console.log("parsed id " + parsed.id);
     if (parsed.type === "join") {
         // A new client has joined.
         // First, send them all the changes for all the current synths that are in the chat.
@@ -46,7 +45,7 @@ console.log("parsed id " + parsed.id);
 
         // Now create a new record to store all changes sent to this synth.
        clientMessages[parsed.id] = [parsed];
-       console.log("point 1 " + data);
+       console.log("point 1 " + clientMessages[parsed.id]);
     } else if (parsed.type === "leave") {
         delete clientMessages[parsed.id];
         console.log("point 2 " + data);
