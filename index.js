@@ -17,7 +17,8 @@ console.log("Server listening on port " + config.port);
 
 
 var allConnectedSockets = [];
-
+  var clientMessages = {};
+  
 wss.on("connection", function (socket) {
     allConnectedSockets.push(socket);
     socket.on("message", function (data) {
@@ -32,7 +33,7 @@ wss.on("connection", function (socket) {
         });
     });
 
-    var clientMessages = {};
+
 
 socket.on("message", function (data) {
   var parsed = JSON.parse(data);
