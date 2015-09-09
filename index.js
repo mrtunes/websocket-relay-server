@@ -47,6 +47,7 @@ socket.on("message", function (data) {
         // Now create a new record to store all changes sent to this synth.
        clientMessages[parsed.id] = [parsed];
        console.log(clientMessages);
+      
     } else if (parsed.type === "leave") {
         delete clientMessages[parsed.id];
         console.log("point 2 " + data);

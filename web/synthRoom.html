@@ -9,8 +9,6 @@
     <script>
 window.onload = function() {
   myStorage = localStorage;
-  console.log(myStorage.username);
-	console.log(myStorage.synthgen);
 	var userlist = document.getElementById("userList");
 
 
@@ -19,10 +17,6 @@ window.onload = function() {
 
 
   var socket = new WebSocket('ws://localhost:8081');
-  //socket.send("connected");
-  //var jsonstring = JSON.stringify({"freq":300, "gate":1});
-  //socket.send(jsonstring);
-
 
   socket.onopen = function(event) {
  var jsonstring = JSON.stringify({"type":"join", "id":myStorage.username});
@@ -48,6 +42,8 @@ function applyMessage(message) {
 			//	console.log("logging the msg " + message.value);
 				synths[message.id].play();
 				//userList.innerHTML += message.id + "<br />";
+console.log("test");
+console.log(synths[message.id].typeName);
 
     } else if (message.type ==="change") {
         // A synth has just changed. Update it.
@@ -72,8 +68,10 @@ function applyMessage(message) {
 				fluid.each(message.value, function (changesForSynth) { // Loop through each synth in the history record.
             fluid.each(changesForSynth, function (change) { // Loop through each event in the synth’s changes array.
                 applyMessage(changesForSynth);
-							 console.log("message.value " + message.value + message.id);
-								userList.innerHTML += message.id + "<br />";
+							//	console.log("object " + Object.keys(message));
+							console.log(synths[message.id]);
+
+								//userList.innerHTML += message.id + "<br />";
             });
         });
     }
