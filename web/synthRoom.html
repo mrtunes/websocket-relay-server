@@ -71,10 +71,9 @@ function applyMessage(message) {
 
 				fluid.each(message.value, function (changesForSynth) { // Loop through each synth in the history record.
             fluid.each(changesForSynth, function (change) { // Loop through each event in the synth’s changes array.
-                applyChange(changesForSynth);
-
-								console.log("message.value " + message.value);
-								userList.innerHTML += message.value + "<br />";
+                applyMessage(changesForSynth);
+							 console.log("message.value " + message.value + message.id);
+								userList.innerHTML += message.id + "<br />";
             });
         });
     }
