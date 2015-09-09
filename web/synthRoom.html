@@ -30,6 +30,7 @@ window.onload = function() {
 
 
 var synths = {};
+var myUsers = [];
 var localFreq = myStorage.freq;
 var localname = myStorage.username;
 
@@ -43,7 +44,7 @@ function applyMessage(message) {
 				synths[message.id].play();
 				//userList.innerHTML += message.id + "<br />";
 console.log("test");
-console.log(synths[message.id].typeName);
+console.log(synths[message.id]);
 
     } else if (message.type ==="change") {
         // A synth has just changed. Update it.
@@ -69,7 +70,9 @@ console.log(synths[message.id].typeName);
             fluid.each(changesForSynth, function (change) { // Loop through each event in the synth’s changes array.
                 applyMessage(changesForSynth);
 							//	console.log("object " + Object.keys(message));
-							console.log(synths[message.id]);
+							//console.log(synths[message.id]);
+							myUsers[message.id] = [message];
+						  console.log(myUsers);
 
 								//userList.innerHTML += message.id + "<br />";
             });
