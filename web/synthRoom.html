@@ -27,6 +27,7 @@ window.onload = function() {
   socket.onopen = function(event) {
  var jsonstring = JSON.stringify({"type":"join", "id":myStorage.username});
   socket.send(jsonstring);
+
 };
 
 //synths[message.id] = flock.synth({synthDef: {id:message.id, ugen:"flock.ugen.sinOsc", freq:300} });
@@ -46,7 +47,7 @@ function applyMessage(message) {
 				synths[message.id] = flock.synth({synthDef: {id:message.id,  ugen:"flock.ugen.sinOsc", freq:300 } });
 			//	console.log("logging the msg " + message.value);
 				synths[message.id].play();
-				userList.innerHTML += message.id + "<br />";
+				//userList.innerHTML += message.id + "<br />";
 
     } else if (message.type ==="change") {
         // A synth has just changed. Update it.
@@ -66,10 +67,14 @@ function applyMessage(message) {
         // we received. A history record is contains an array of changes for each active synth.
         // As a result, we first need to iterate over the changes for each active synth,
         // and then apply them one-by-one.
-        console.log("message.value " + message.value);
+
+
 				fluid.each(message.value, function (changesForSynth) { // Loop through each synth in the history record.
             fluid.each(changesForSynth, function (change) { // Loop through each event in the synth’s changes array.
                 applyChange(changesForSynth);
+
+								console.log("message.value " + message.value);
+								userList.innerHTML += message.value + "<br />";
             });
         });
     }

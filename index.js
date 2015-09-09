@@ -17,8 +17,8 @@ console.log("Server listening on port " + config.port);
 
 
 var allConnectedSockets = [];
-  var clientMessages = {};
-  
+    var clientMessages = {};
+
 wss.on("connection", function (socket) {
     allConnectedSockets.push(socket);
     socket.on("message", function (data) {
@@ -38,13 +38,15 @@ wss.on("connection", function (socket) {
 socket.on("message", function (data) {
   var parsed = JSON.parse(data);
     if (parsed.type === "join") {
+
+
         // A new client has joined.
         // First, send them all the changes for all the current synths that are in the chat.
          var jsonstringy = JSON.stringify({ type: "history", value: clientMessages});
          socket.send(jsonstringy);
         // Now create a new record to store all changes sent to this synth.
        clientMessages[parsed.id] = [parsed];
-       console.log(clientMessages[parsed.id].length);
+       console.log(clientMessages);
     } else if (parsed.type === "leave") {
         delete clientMessages[parsed.id];
         console.log("point 2 " + data);
