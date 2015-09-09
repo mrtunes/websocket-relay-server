@@ -41,11 +41,9 @@ socket.on("message", function (data) {
         // First, send them all the changes for all the current synths that are in the chat.
          var jsonstringy = JSON.stringify({ type: "history", value: clientMessages});
          socket.send(jsonstringy);
-
-
         // Now create a new record to store all changes sent to this synth.
        clientMessages[parsed.id] = [parsed];
-       console.log("point 1 " + clientMessages[parsed.id]);
+       console.log(clientMessages[parsed.id].length);
     } else if (parsed.type === "leave") {
         delete clientMessages[parsed.id];
         console.log("point 2 " + data);
