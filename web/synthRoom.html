@@ -16,7 +16,7 @@ window.onload = function() {
 
 
 
-  var socket = new WebSocket('ws://localhost:8081');
+  var socket = new WebSocket('ws://localhost:8080');
 
   socket.onopen = function(event) {
  var jsonstring = JSON.stringify({"type":"join", "id":myStorage.username});
@@ -30,7 +30,6 @@ window.onload = function() {
 
 
 var synths = {};
-var myUsers = {};
 var localFreq = myStorage.freq;
 var localname = myStorage.username;
 
@@ -44,7 +43,7 @@ function applyMessage(message) {
 				synths[message.id].play();
 				//userList.innerHTML += message.id + "<br />";
 console.log("test");
-console.log(synths[message.id]);
+console.log("hello " + synths[message.id]);
 
     } else if (message.type ==="change") {
         // A synth has just changed. Update it.
@@ -69,12 +68,7 @@ console.log(synths[message.id]);
 				fluid.each(message.value, function (changesForSynth) { // Loop through each synth in the history record.
             fluid.each(changesForSynth, function (change) { // Loop through each event in the synth’s changes array.
                 applyMessage(changesForSynth);
-							//	console.log("object " + Object.keys(message));
-							//console.log(synths[message.id]);
-							myUsers[message.id] = [message];
-						  console.log(myUsers);
 
-								//userList.innerHTML += message.id + "<br />";
             });
         });
     }
@@ -83,10 +77,18 @@ console.log(synths[message.id]);
 socket.onmessage = function (evt) {
   	var message = JSON.parse(evt.data);
     applyMessage(message);
+		console.log(message.value);
+		Object.keys(Object).forEach(function(key) {
+				console.log("keys " + message.value, Object[message.value]);
+		});
+
+
 };
 
 
-
+/*Object.keys(Object).forEach(function(key) {
+		console.log("keys " + message.value, Object[message.value]);
+});*/
 
 socket.onclose = function(event) {
   var jsonstring = JSON.stringify({type: "leave"});
