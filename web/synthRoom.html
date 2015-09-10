@@ -77,10 +77,12 @@ console.log("hello " + synths[message.id]);
 socket.onmessage = function (evt) {
   	var message = JSON.parse(evt.data);
     applyMessage(message);
-		console.log(message.value);
-		Object.keys(Object).forEach(function(key) {
-				console.log("keys " + message.value, Object[message.value]);
-		});
+		//console.log(message.value);
+
+Object.keys(synths).forEach(function (id) { console.log("User" + id);});
+	//	Object.keys(synths).forEach(function(key) {
+		//		console.log("keys " + message.value, Object[message.value]);
+	//	});
 
 
 };
